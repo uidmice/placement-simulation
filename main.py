@@ -1,11 +1,5 @@
-import networkx as nx
-import matplotlib.pyplot as plt
 # from Program import Program
-from placelib.Network import Network
-from placelib.util import *
 from placelib.Simulation import Simulation
-import numpy as np
-
 
 simulation = Simulation()
 

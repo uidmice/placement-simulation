@@ -1,6 +1,6 @@
 from placelib.util import *
-from placelib.Network import *
-from placelib.Program import *
+from models.program import Program
+from models.network import Network
 
 
 class Simulation:
@@ -33,7 +33,7 @@ class Simulation:
                                 device_cap_dist, device_compute_lower, device_compute_upper,
                                 edge_server_dist, edge_compute_lower, edge_compute_upper, rnd)
         # print(G_nodes.nodes.data())
-        # print(G_nodes.edges.data())
+        print(G_nodes.edges.data())
         # print(G_domain.nodes.data())
         # print(G_domain.edges.data())
 

@@ -1,88 +1,12 @@
 import numpy as np
 import networkx as nx
-
-from placelib.Program import Program, Operator
 from networkx.drawing.nx_pydot import graphviz_layout
 import matplotlib.pyplot as plt
 
-
-class Device:
-    def __init__(self, id, compute_rate, memory=100000):
-        self.id = id
-        self.compute_rate = compute_rate
-        self.memory = memory
-        self.memory_usage = 0
-        self.compute_usage = 0
-        self.operators = []
-
-    def load(self, operator: Operator):
-        self.operators.append(operator)
-        self.memory_usage += operator.memory_requirement
-        self.compute_usage += operator.computation / self.compute_rate
-
-        if self.compute_usage > 1:
-            print("Computation overload on device " + str(self.id))
-            return False
-        if self.memory_usage > self.memory:
-            print("Memory overload on device " + str(self.id))
-            return False
-        return True
-
-    def offload(self, operator: Operator):
-        if operator in self.operators:
-            self.operators.remove(operator)
-            self.memory_usage -= operator.memory_requirement
-            self.compute_usage -= operator.computation / self.compute_rate
-
-class Router:
-    def __init__(self, id, proc_rate, traffic=10):
-        self.id = id
-        self.proc_rate = proc_rate
-        self.traffic = traffic #packet per second
-        assert self.traffic < self.proc_rate, "Traffic overload on router " + str(self.id)
-        self.delay = 1000/((self.proc_rate - traffic)) # in ms
-
-    def load_traffic(self, extra=1):
-        self.traffic += extra
-        assert self.traffic < self.proc_rate, "Traffic overload on router " + str(self.id)
-        self.delay = 1000 / (self.proc_rate - self.traffic)
-
-    def offload_traffic(self, remove=1):
-        self.traffic = max(self.traffic-remove, 0)
-        self.delay = 1000 / ((self.proc_rate - self.traffic))
-
-
-class Link:
-    def __init__(self, from_node, to_node, bw, delay):
-        self.from_node = from_node
-        self.to_node = to_node
-        self.bw = bw # mbps
-        self.delay = delay/1000 # ms
-
-    def link_delay(self, kbytes): # ms
-        return self.delay + kbytes/self.bw
-
-
-class Domain:
-    def __init__(self, id, type):
-        self.id = id
-        self.nodes = []
-        self.type = type
-        self.leaf_domains = []
-        self.parent_domains = []
-        if self.type == 'lan':
-            self.function = 'operating'
-            self.leaf_domains = None
-        else:
-            self.function = 'routing'
-
-        if self.type == 'transit':
-            self.parent_domains = None
-
-    def add_node(self, node, node_type):
-        self.nodes.append(node)
-        if node_type == 'edge':
-            self.function = 'operating'
+from models.domain import Domain
+from models.device import Device
+from models.router import Router
+from models.link import Link
 
 
 class Network:
