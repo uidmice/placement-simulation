@@ -25,6 +25,12 @@ class Network:
         for d in self.G_domain.nodes:
             type = self.G_domain.nodes[d]['type']
             self.domains[d] = Domain(d, type)
+            if type == 'transit':
+                self.G_domain.nodes[d]['level'] = 3
+            elif type == 'stub':
+                self.G_domain.nodes[d]['level'] = 2
+            else:
+                self.G_domain.nodes[d]['level'] = 1
             for n in self.G_domain.adj[d]:
                 if d in self.transit_domain and n in self.stub_domain:
                     self.domains[d].leaf_domains.append(n)
@@ -42,6 +48,9 @@ class Network:
             else:
                 self.nodes[n] = Router(n, self.G_nodes.nodes[n]['rate'])
             self.domains[self.G_nodes.nodes[n]['domain']].add_node(n, type)
+
+        for e in self.G_domain.edges:
+            self.G_domain.edges[e]['weight'] = self.latency_between_domains(e[0], e[1], 10)
 
     def get_shortest_path(self, node1, node2):
         return nx.shortest_path(self.G_nodes, node1, node2, weight='weight')
@@ -78,9 +87,53 @@ class Network:
             stubs = self.domains[domain].leaf_domains
             return [item for n in stubs for item in self.domains[n].leaf_domains]
 
-    def sub_graph_domain(self, domain):
+    def sub_graph_domains(self, domain):
         if domain in self.lan_domain:
-            return [domain]
+            return {domain}
+        a =  set().union(*[self.sub_graph_domains(d) for d in self.domains[domain].leaf_domains])
+        a.add(domain)
+        return a
+
+    def is_operating(self, domain):
+        return self.domains[domain].function == 'operating'
+
+    def is_routing(self, domain):
+        return self.domains[domain].function == 'routing'
+
+    def get_operating_devices(self, domain):
+        if self.is_routing(domain):
+            return []
+        return [n for n in self.domains[domain].nodes if n in self.edge_servers or n in self.end_devices]
+
+    def random_node(self, domain):
+        return np.random.choice(self.domains[domain].nodes)
+
+    def common_domain(self, domain_list: list):
+        if len(domain_list) == 0:
+            return None
+
+        if len(domain_list) == 1:
+            return domain_list[0]
+
+        if len(domain_list) == 2:
+            d1 = domain_list[0]
+            d2 = domain_list[1]
+            if d1 in self.sub_graph_domains(d2):
+                return d2
+            if d2 in self.sub_graph_domains(d1):
+                return d1
+            p = nx.shortest_path(self.G_domain, d1, d2, weight='weight')
+            current_level = self.G_domain.nodes[d1]['level']
+            current_domain = d1
+            for i in range(len(p) - 1):
+                if self.G_domain.nodes[p[i+1]]['level'] > current_level:
+                    current_level = self.G_domain.nodes[p[i+1]]['level']
+                    current_domain = p[i+1]
+            return current_domain
+
+        return self.common_domain([domain_list[0], self.common_domain(domain_list[1:])])
+
+
 
 
     def draw_nodes(self, show=False):

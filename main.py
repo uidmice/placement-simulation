@@ -1,7 +1,34 @@
-# from Program import Program
-from placelib.Simulation import Simulation
+from placelib.simulation import Simulation
 
-simulation = Simulation()
+class Arguments:
+        def __init__(self):
+                # Network parameters
+                self.edge_server_transit_percentage = 0.1
+                self.edge_server_stub_percentage = 0.3
+                self.edge_server_gateway_percentage = 0.4
+
+                self.router_cap_dist = 'uniform'
+                self.router_factor = 'proc_time'
+                self.device_cap_dist = 'uniform'
+                self.edge_server_dist = 'uniform'
+                self.router_proc_time_lower = 5 #us
+                self.router_proc_time_upper = 15 #us
+                self.device_compute_lower = 2 #MIPS
+                self.device_compute_upper = 5 #MIPS
+                self.edge_compute_lower = 8 #MIPS
+                self.edge_compute_upper = 12 #MIPS
+
+                self.num_operators = 9
+                self.num_roots = 1
+                self.op_comp_distr = 'uniform'
+                self.stream_byte_distr = 'uniform'
+                self.op_comp_lower = 5000
+                self.op_comp_upper = 100000
+                self.stream_byte_lower = 10
+                self.stream_byte_upper = 60000
+
+args = Arguments()
+simulation = Simulation(args)
 
 
 
