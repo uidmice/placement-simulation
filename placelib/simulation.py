@@ -5,9 +5,9 @@ from placelib.mapper import heuMapper
 
 
 class Simulation:
-    def __init__(self, args, seed=3):
+    def __init__(self, args):
 
-        self.rnd = np.random.RandomState(seed)
+        self.rnd = np.random.RandomState(args.seed)
         self.args = args
 
         '''

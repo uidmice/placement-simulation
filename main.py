@@ -25,6 +25,7 @@ def get_args():
     parser.add_argument('--logdir_suffix',
                         default='',
                         help='log directory suffix')
+    parser.add_argument('--seed', type=int, default=1, help='Random seed (default 1)')
 
 
 
