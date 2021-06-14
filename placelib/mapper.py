@@ -20,15 +20,28 @@ class Mapper:
 
 
 class heuMapper(Mapper):
-    def __init__(self, program: Program, network: Network, mapping, delta=10, p_explore=0.3, num_heuristic_restriction=5):
+    def __init__(self, program: Program, network: Network, mapping: dict, start_operatpr, end_operator, delta=10, p_explore=0.3):
         super().__init__(program, network, mapping)
         assert len(self.pinned) > 1, "Heuristic placement requires at least two pinned operators"
         self.delta = delta
         self.p_explore = p_explore
-        self.num_heuristic_restriction = num_heuristic_restriction
+        self.start_op = start_operatpr
+        self.end_op = end_operator
+        self.path_in_between = nx.all_simple_paths(self.program.G, source=self.start_op, target=self.end_op)
+
+    def map(self, num_heuristic_restriction=5, N=1):
+        best_mapping = self.single_map(num_heuristic_restriction)
+        critical_time = self.evaluate(best_mapping)
+        for _ in range(N - 1):
+            mapping = self.single_map(num_heuristic_restriction)
+            time = self.evaluate(mapping)
+            if time < critical_time:
+                best_mapping = mapping
+                critical_time = time
+        return best_mapping
 
 
-    def map(self, num_heuristic_restriction):
+    def single_map(self, num_heuristic_restriction):
         hier, node_loc = self.cluster()
         program_graph = self.program.G.to_undirected()
         operator_restriction = self.domain_restriction(hier, node_loc, self.p_explore)
@@ -64,6 +77,19 @@ class heuMapper(Mapper):
                     operator_restriction[operator] = self.network.get_domain_id(operator_restriction_node[operator])
         return mapping
 
+    def evaluate(self, mapping):
+        critical_time = 0
+        for path in self.path_in_between:
+            compute_time = np.sum([self.program.operators[op].estimate_compute_time(self.network.nodes[mapping[op]]) for op in path])
+            communication_time = 0
+            for i in range(len(path) - 1):
+                op1 = path[i]
+                op2 = path[i + 1]
+                bytes = self.program.get_stream_bytes_between_operators(op1, op2)
+                communication_time += self.network.latency_between_nodes(op1, op2, kbytes=bytes)
+                if compute_time + communication_time > critical_time:
+                    critical_time = compute_time + communication_time
+        return critical_time
 
 
     def cluster(self):

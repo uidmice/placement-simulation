@@ -1,36 +1,192 @@
+import argparse
+
 from placelib.simulation import Simulation
 
-class Arguments:
-        def __init__(self):
-                # Network parameters
-                self.edge_server_transit_percentage = 0.1
-                self.edge_server_stub_percentage = 0.3
-                self.edge_server_gateway_percentage = 0.4
 
-                self.router_cap_dist = 'uniform'
-                self.router_factor = 'proc_time'
-                self.device_cap_dist = 'uniform'
-                self.edge_server_dist = 'uniform'
-                self.router_proc_time_lower = 5 #us
-                self.router_proc_time_upper = 15 #us
-                self.device_compute_lower = 2 #MIPS
-                self.device_compute_upper = 5 #MIPS
-                self.edge_compute_lower = 8 #MIPS
-                self.edge_compute_upper = 12 #MIPS
+def restricted_float(x):
+    try:
+        x = float(x)
+    except ValueError:
+        raise argparse.ArgumentTypeError("%r not a floating-point literal" % (x,))
 
-                self.num_operators = 9
-                self.num_roots = 1
-                self.op_comp_distr = 'uniform'
-                self.stream_byte_distr = 'uniform'
-                self.op_comp_lower = 5000
-                self.op_comp_upper = 100000
-                self.stream_byte_lower = 10
-                self.stream_byte_upper = 60000
+    if x < 0.0 or x > 1.0:
+        raise argparse.ArgumentTypeError("%r not in range [0.0, 1.0]"%(x,))
+    return x
 
-args = Arguments()
-simulation = Simulation(args)
+def get_args():
+
+    parser = argparse.ArgumentParser(description='Placement Simulation Parameters')
+    parser.add_argument('--alg',
+                        default='heuristic',
+                        help='Placement Algorithm: heuristic, exhaustive, greedy (default: heuristic)')
+    parser.add_argument('--logdir',
+                        default='runs',
+                        help='exterior log directory')
+    parser.add_argument('--logdir_suffix',
+                        default='',
+                        help='log directory suffix')
 
 
+
+    ########################## Network Parameters########################
+
+    ## For edge server:
+    parser.add_argument('--edge_server_t',
+                        type=restricted_float,
+                        default=0.1,
+                        dest='edge_server_transit_percentage',
+                        help='Density of edge server at transit layer [0.0, 1.0] (default: 0.1)')
+    parser.add_argument('--edge_server_s',
+                        type=restricted_float,
+                        default=0.3,
+                        dest='edge_server_stub_percentage',
+                        help='Density of edge server at stub layer [0.0, 1.0] (default: 0.3)')
+    parser.add_argument('--edge_server_lan',
+                        type=restricted_float,
+                        default=0.3,
+                        dest='edge_server_gateway_percentage',
+                        help='Density of edge server at bottom layer (LAN) [0.0, 1.0] (default: 0.3)')
+
+    edge_server_cap_distr_group = parser.add_mutually_exclusive_group()
+    edge_server_cap_distr_group.add_argument('--edge_server_cap_uniform',
+                                       action='store_const',
+                                       dest='edge_server_cap_distr',
+                                       const='uniform',
+                                       default='uniform')
+    edge_server_cap_distr_group.add_argument('--edge_server_cap_normal',
+                                       action='store_const',
+                                       dest='edge_server_cap_distr',
+                                       const='normal')
+    parser.add_argument('--edge_server_cap_p1',
+                        type=float,
+                        default=8,
+                        help='First parameter for edge server capacity; it is the lower bound if uniform distrribution is selected or mean if normal distribution. The unit is million instructions per second (MIPS)  (default: 8)')
+    parser.add_argument('--edge_server_cap_p2',
+                        type=float,
+                        default=12,
+                        help='Second parameter for edge server capacity; it is the upper bound if uniform distribution is selected or mean if normal distribution. The unit is million instructions per second (MIPS)  (default: 12)')
+
+    ## For router:
+    router_cap_distr_group = parser.add_mutually_exclusive_group()
+    router_cap_factor_group = parser.add_mutually_exclusive_group()
+    router_cap_distr_group.add_argument('--router_cap_uniform',
+                                       action='store_const',
+                                       dest='router_cap_distr',
+                                       const='uniform',
+                                       default='uniform')
+    router_cap_distr_group.add_argument('--router_cap_normal',
+                                       action='store_const',
+                                       dest='router_cap_distr',
+                                       const='normal')
+    router_cap_factor_group.add_argument('--router_proc_time',
+                                       action='store_const',
+                                       dest='router_factor',
+                                       const='proc_time',
+                                       default='proc_time')
+    router_cap_factor_group.add_argument('--router_rate',
+                                       action='store_const',
+                                       dest='router_factor',
+                                       const='rate')
+    parser.add_argument('--router_cap_p1',
+                        type=float,
+                        default=5,
+                        help='First parameter for router capacity; it is the lower bound if uniform distribution is selected or mean if normal distribution. The unit is "us" if --router_proc_time (default), or "packet per second" other wise  (default: 5)')
+    parser.add_argument('--router_cap_p2',
+                        type=float,
+                        default=15,
+                        help='Second parameter for router capacity; it is the upper bound if uniform distribution is selected or mean if normal distribution. The unit is "us" if --router_proc_time (default), or "packet per second" other wise  (default: 15)')
+
+    ## For end devices:
+    device_cap_distr_group = parser.add_mutually_exclusive_group()
+    device_cap_distr_group.add_argument('--device_cap_uniform',
+                                            action='store_const',
+                                            dest='device_cap_distr',
+                                            const='uniform',
+                                            default='uniform')
+    edge_server_cap_distr_group.add_argument('--device_cap_normal',
+                                            action='store_const',
+                                            dest='device_cap_distr',
+                                            const='normal')
+    parser.add_argument('--device_cap_p1',
+                        type=float,
+                        default=2,
+                        help='First parameter for end device capacity; it is the lower bound if uniform distribution is selected or mean if normal distribution. The unit is million instructions per second (MIPS)  (default: 2)')
+    parser.add_argument('--device_cap_p2',
+                        type=float,
+                        default=5,
+                        help='Second parameter for end device capacity; it is the upper bound if uniform distribution is selected or mean if normal distribution. The unit is million instructions per second (MIPS)  (default: 5)')
+
+
+    ########################## Program Parameters########################
+    parser.add_argument('--num_operators',
+                        type=int,
+                        default=9,
+                        help='Number of operators in the program graph (default: 9)')
+    parser.add_argument('--num_roots',
+                        type=int,
+                        default=1,
+                        help='Number of roots in the program graph (default: 1)')
+    ## For operators:
+    operator_comp_distr_group = parser.add_mutually_exclusive_group()
+    operator_comp_distr_group.add_argument('--op_comp_uniform',
+                                       action='store_const',
+                                       dest='op_comp_distr',
+                                       const='uniform',
+                                       default='uniform')
+    operator_comp_distr_group.add_argument('--op_comp_normal',
+                                            action='store_const',
+                                            dest='op_comp_distr',
+                                            const='normal')
+    parser.add_argument('--op_comp_p1',
+                        type=float,
+                        default=5000,
+                        help='First parameter for end device capacity; it is the lower bound if uniform distribution is selected or mean if normal distribution. The unit is number of instructions (default: 5000)')
+    parser.add_argument('--op_comp_p2',
+                        type=float,
+                        default=100000,
+                        help='Second parameter for end device capacity; it is the upper bound if uniform distribution is selected or mean if normal distribution. The unit is number of instructions  (default: 100000)')
+
+    ## For streams:
+    stream_bytes_distr_group = parser.add_mutually_exclusive_group()
+    stream_bytes_distr_group.add_argument('--stream_byte_uniform',
+                                          action='store_const',
+                                          dest='stream_byte_distr',
+                                          const='uniform',
+                                          default='uniform')
+    stream_bytes_distr_group.add_argument('--stream_byte_normal',
+                                          action='store_const',
+                                          dest='stream_byte_distr',
+                                          const='normal')
+    parser.add_argument('--stream_byte_p1',
+                        type=float,
+                        default=10,
+                        help='First parameter for end device capacity; it is the lower bound if uniform distribution is selected or mean if normal distribution. The unit is kbytes (default: 10)')
+    parser.add_argument('--stream_byte_p2',
+                        type=float,
+                        default=60000,
+                        help='Second parameter for end device capacity; it is the upper bound if uniform distribution is selected or mean if normal distribution. The unit is kbytes  (default: 60000)')
+
+
+    ################ heuristic algorithm ####################
+    parser.add_argument('--num_heuristic_restriction',
+                        type=int,
+                        default=5,
+                        help='Number of heuristic restrictions applied during mapping (default: 5)')
+    parser.add_argument('--num_tries',
+                        type=int,
+                        default=10,
+                        help='Number of tries (default: 10)')
+
+    return parser.parse_args()
+
+
+
+
+
+if __name__ == '__main__':
+        args = get_args()
+        print(args)
+        simulation = Simulation(args)
 
 
 
