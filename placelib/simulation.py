@@ -34,7 +34,7 @@ class Simulation:
         self.network = Network(G_nodes, G_domain, pos_node)
         self.program = Program(G_app, self.node_s, self.node_t)
 
-        self.network.draw_nodes(True)
+        self.network.draw_nodes(True) # comment out for testing runtime
 
         self.source = self.rnd.choice(self.network.end_devices)
         self.target = self.rnd.choice(self.network.end_devices)
@@ -43,6 +43,7 @@ class Simulation:
             self.mapper = heuMapper(self.program, self.network, {self.node_s: self.source, self.node_t: self.target},
                                     self.node_s, self.node_t)
             print(self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries))
+            print(self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries), file=open("sim_results.txt", "a"))
 
 
 

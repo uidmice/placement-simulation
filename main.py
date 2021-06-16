@@ -2,6 +2,8 @@ import argparse
 
 from placelib.simulation import Simulation
 
+import time
+
 
 def restricted_float(x):
     try:
@@ -187,7 +189,13 @@ def get_args():
 if __name__ == '__main__':
         args = get_args()
         print(args)
+        print("\n", file=open("sim_results.txt", "a"))
+        print(args, file=open("sim_results.txt", "a"))
+        time1 = time.time()
         simulation = Simulation(args)
+        time2 = time.time()
+        print(time2 - time1)
+        print("Simulation took:", time2 - time1, "seconds", file=open("sim_results.txt", "a"))
 
 
 
