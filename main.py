@@ -194,7 +194,7 @@ if __name__ == '__main__':
         time1 = time.time()
         simulation = Simulation(args)
         time2 = time.time()
-        print(time2 - time1)
+        print("Simulation time:", time2 - time1)
         print("Simulation took:", time2 - time1, "seconds", file=open("sim_results.txt", "a"))
 
 

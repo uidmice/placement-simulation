@@ -3,10 +3,12 @@ from models.program import Program
 from models.network import Network
 from placelib.mapper import heuMapper
 
+import time
 
 class Simulation:
     def __init__(self, args):
-
+        
+        # time1 = time.time()
         self.rnd = np.random.RandomState(args.seed)
         self.args = args
 
@@ -34,16 +36,25 @@ class Simulation:
         self.network = Network(G_nodes, G_domain, pos_node)
         self.program = Program(G_app, self.node_s, self.node_t)
 
-        self.network.draw_nodes(True) # comment out for testing runtime
+        # self.network.draw_nodes(True) # comment out for testing runtime
 
         self.source = self.rnd.choice(self.network.end_devices)
         self.target = self.rnd.choice(self.network.end_devices)
-
+        # time2 = time.time()
+        # print("generate time = ", time2 - time1)
         if self.args.alg == 'heuristic':
+            
             self.mapper = heuMapper(self.program, self.network, {self.node_s: self.source, self.node_t: self.target},
                                     self.node_s, self.node_t)
-            print(self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries))
-            print(self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries), file=open("sim_results.txt", "a"))
+            
+            time1 = time.time()
+            result_dict = self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries)
+            # print(self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries))
+            time2 = time.time()
+            print("Mapper time = ", time2 - time1)
+            print("Mapper time = ", time2 - time1, file=open("sim_results.txt", "a"))
+            print(result_dict)
+            print(result_dict, file=open("sim_results.txt", "a"))
 
 
 
