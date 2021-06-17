@@ -5,6 +5,23 @@ from placelib.mapper import heuMapper
 
 
 class Simulation:
+    '''
+        The Simulation object contains is an instance of the simulation
+
+        Parameters
+        ----------
+        arg : str
+            The arg is used for ...
+        *args
+            The variable arguments are used for ...
+        **kwargs
+            The keyword arguments are used for ...
+
+        Attributes
+        ----------
+        arg : str
+            This is where we store arg,
+    '''
     def __init__(self, args):
 
         self.rnd = np.random.RandomState(args.seed)

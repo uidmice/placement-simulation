@@ -10,6 +10,23 @@ from models.link import Link
 
 
 class Network:
+    '''
+        The Network object captures the hierarchical network model
+
+        Parameters
+        ----------
+        G_nodes : nx.Graph
+            The network graph. Nodes in the graph represents either Devices (including end-devices and edge-servers) or Routers. Edges are communication links.
+        G_domain : nx.Graph
+            The hierarchical domain graph. A node in the graph is either a transit domain, a stub domain, or a LAN.
+        pos_node : dict {device_id : (x, y) }
+            The location of the each nodes in the network graph G_node
+
+        Attributes
+        ----------
+        arg : str
+            This is where we store arg,
+    '''
     def __init__(self, G_nodes: nx.Graph, G_domain: nx.Graph, pos_node):
         self.G_nodes = G_nodes
         self.G_domain = G_domain
