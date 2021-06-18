@@ -1,6 +1,6 @@
 import argparse
 
-from placelib.simulation import Simulation
+from placelib.experiment import Experiment
 
 import time
 
@@ -15,6 +15,17 @@ def restricted_float(x):
         raise argparse.ArgumentTypeError("%r not in range [0.0, 1.0]"%(x,))
     return x
 
+
+def positive_int(x):
+    try:
+        x = int(x)
+    except ValueError:
+        raise argparse.ArgumentTypeError("%r not an integer literal" % (x,))
+
+    if x < 1:
+        raise argparse.ArgumentTypeError("%r not positive"%(x,))
+    return x
+
 def get_args():
 
     parser = argparse.ArgumentParser(description='Placement Simulation Parameters')
@@ -27,8 +38,8 @@ def get_args():
     parser.add_argument('--logdir_suffix',
                         default='',
                         help='log directory suffix')
-    parser.add_argument('--seed', type=int, default=1, help='Random seed (default 1)')
-
+    parser.add_argument('--seeds', type=int, nargs='+', default=[0], help='Random seeds')
+    parser.add_argument('--num_experiments', type=positive_int, default=1, help="Number of experiments to run per seed")
 
 
     ########################## Network Parameters########################
@@ -189,13 +200,19 @@ def get_args():
 if __name__ == '__main__':
         args = get_args()
         print(args)
-        print("\n", file=open("sim_results.txt", "a"))
-        print(args, file=open("sim_results.txt", "a"))
-        time1 = time.time()
-        simulation = Simulation(args)
-        time2 = time.time()
-        print("Simulation time:", time2 - time1)
-        print("Simulation took:", time2 - time1, "seconds", file=open("sim_results.txt", "a"))
+        experiment = Experiment(args)
+        mappings, runtimes, delays = experiment()
+        print(runtimes)
+        print(delays)
+        print(mappings)
+        # print(args)
+        # print("\n", file=open("sim_results.txt", "a"))
+        # print(args, file=open("sim_results.txt", "a"))
+        # time1 = time.time()
+        # simulation = Simulation(args)
+        # time2 = time.time()
+        # print(time2 - time1)
+        # print("Simulation took:", time2 - time1, "seconds", file=open("sim_results.txt", "a"))
 
 
 
