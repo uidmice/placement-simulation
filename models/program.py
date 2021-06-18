@@ -5,6 +5,32 @@ from models.operator import Operator
 from models.stream import Stream
 
 class Program:
+    '''
+            The program model
+
+            Parameters
+            ----------
+            G : nx.DiGraph
+                a directed acyclic graph representing the program
+            ddl_s :
+                the operator_id of the source operator
+            ddl_t :
+                the operator_id of the target operator
+
+            Attributes
+            ----------
+            G :
+                store G
+            ddl_s :
+                store ddl_s
+            ddl_t :
+                store ddl_t
+            operators : dict {operator_id : Operator}
+                a dictionary of operators in the graph with operator_ids as keys
+            streams : dict {stream_id : Stream}
+                a dictionary of streams in the graph with stream_ids as keys
+
+        '''
     def __init__(self, G, ddl_s, ddl_t):
         assert nx.is_directed_acyclic_graph(G), "Program graph is not a DAG"
         assert ddl_s in G.nodes, "Operator " + str(ddl_s) + "is not in the graph"
@@ -25,9 +51,9 @@ class Program:
             self.streams[count] = s
             self.operators[edge[0]].out_streams.append(s)
             self.operators[edge[1]].in_streams.append(s)
-            self.operators[edge[1]].root = False
 
-    def get_stream_bytes_between_operators(self, op1, op2):
+    def get_stream_kbytes_between_operators(self, op1, op2):
+        """ Return the number of kbytes to be sent from op1 to op2"""
         assert op1 in self.operators, str(op1) + ' not in the program graph'
         assert op2 in self.operators, str(op2) + ' not in the program graph'
         return self.G.edges[op1, op2]['bytes']

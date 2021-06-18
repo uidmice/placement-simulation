@@ -9,6 +9,12 @@ from models.router import Router
 from models.link import Link
 
 
+"""
+Constants associated with the network model
+"""
+
+LINK_NOISE_SCALE = 5 # ms
+
 class Network:
     '''
         The Network object captures the hierarchical network model
@@ -24,8 +30,27 @@ class Network:
 
         Attributes
         ----------
-        arg : str
-            This is where we store arg,
+        G_nodes : nx.Graph
+            store G_nodes, each node in the graph has a node_id
+        G_domain : nx.Graph
+            store G_domain, each domian in the graph has a domain_id
+        pos_node : dict
+            store pos_node
+        domain : dict {domain_id : Domain}
+            a dictionary that holds the domain objects with domain ids as keys
+        nodes : dict {node_id : Device/Router}
+            a dictionary that holds Device and Router objects in the graph with node_id as keys
+        end_devices : list
+            a list of node_ids of all end devices in the network
+        edge_servers : list
+            a list of node_ids of edge servers in the network
+        transit_domain : list
+            a list of domain_ids of transit domains
+        stub_domain : list
+            a list of domain_ids of stub domains
+        lan_domain : list
+            a list of domain_ids of LANs
+
     '''
     def __init__(self, G_nodes: nx.Graph, G_domain: nx.Graph, pos_node):
         self.G_nodes = G_nodes
@@ -50,11 +75,11 @@ class Network:
                 self.G_domain.nodes[d]['level'] = 1
             for n in self.G_domain.adj[d]:
                 if d in self.transit_domain and n in self.stub_domain:
-                    self.domains[d].leaf_domains.append(n)
+                    self.domains[d].child_domains.append(n)
                 elif d in self.stub_domain and n in self.transit_domain:
                     self.domains[d].parent_domains.append(n)
                 elif d in self.stub_domain and n in self.lan_domain:
-                    self.domains[d].leaf_domains.append(n)
+                    self.domains[d].child_domains.append(n)
                 elif d in self.lan_domain and n in self.stub_domain:
                     self.domains[d].parent_domains.append(n)
 
@@ -70,59 +95,73 @@ class Network:
             self.G_domain.edges[e]['weight'] = self.latency_between_domains(e[0], e[1], 10)
 
     def get_shortest_path(self, node1, node2):
+        '''Return the shortest path between node1 and node2 in the graph'''
         return nx.shortest_path(self.G_nodes, node1, node2, weight='weight')
 
-    def latency_between_nodes(self, node1, node2, kbytes): # ms
+    def latency_between_nodes(self, node1, node2, kbytes, average=True):
+        """Return the communication latency of sending kbytes from node1 to node2. If average is True, the expected latency is returned. Otherwise, it is sampled from a distribution"""
         path = nx.shortest_path(self.G_nodes, node1, node2, weight='weight')
         d = 0
         for i in range(len(path) - 1):
             d += self.G_nodes[path[i]][path[i+1]]['weight']/1000 + kbytes/self.G_nodes[path[i]][path[i+1]]['bw']
+            if not average:
+                d += LINK_NOISE_SCALE * np.random.randn()
         for i in range(len(path) - 2):
-            d += self.nodes[path[i+1]].delay
+            d += self.nodes[path[i+1]].delay(average)
         return d * 10
 
     def latency_from_node_to_domain(self, node, domain, kbytes):
+        """ Return the average latency of sending kbytes from node (in self.nodes) to a domain (in self.domains) """
         target_nodes = self.domains[domain].nodes
         return np.average([self.latency_between_nodes(node, tn, kbytes) for tn in target_nodes])
 
     def latency_between_domains(self, domain1, domain2, kbytes):
+        """ Return the average latency of sending kbytes from domain1 (in self.domains) to domain2 (in self.domains)"""
         nodes = self.domains[domain1].nodes
         return np.average([self.latency_from_node_to_domain(node, domain2, kbytes) for node in nodes])
 
     def get_domain_id(self, node):
+        """ Return the id of the domain where node belongs"""
         return self.G_nodes.nodes[node]['domain']
 
     def get_parent_domain_id(self, domain):
+        """ Return the id of the parent domain of the domain"""
         return self.domains[domain].parent_domains
 
     def children_lan_domain(self, domain):
+        """ Return a list of domain_ids of all LAN domains under the domain """
         if domain in self.lan_domain:
             return [domain]
         if domain in self.stub_domain:
-            return self.domains[domain].leaf_domains.copy()
+            return self.domains[domain].child_domains
         if domain in self.transit_domain:
-            stubs = self.domains[domain].leaf_domains
-            return [item for n in stubs for item in self.domains[n].leaf_domains]
+            stubs = self.domains[domain].child_domains
+            return [item for n in stubs for item in self.domains[n].child_domains]
 
     def sub_graph_domains(self, domain):
+        """ Return a set of node_ids that are in the sub-area of that domain"""
         if domain in self.lan_domain:
             return {domain}
-        a =  set().union(*[self.sub_graph_domains(d) for d in self.domains[domain].leaf_domains])
+        a =  set().union(*[self.sub_graph_domains(d) for d in self.domains[domain].child_domains])
         a.add(domain)
         return a
 
     def is_operating(self, domain):
+        """ Return True if the domain is an operating domain; False otherwise"""
         return self.domains[domain].function == 'operating'
 
     def is_routing(self, domain):
+        """ Return True if the domain is an routing domain; False otherwise"""
         return self.domains[domain].function == 'routing'
 
     def get_operating_devices(self, domain):
+        """ Return a list of node_ids of devives in the domain"""
         if self.is_routing(domain):
             return []
         return [n for n in self.domains[domain].nodes if n in self.edge_servers or n in self.end_devices]
 
     def random_node(self, domain):
+        """ Return the node_id of a randomly selected node in the domain"""
         return np.random.choice(self.domains[domain].nodes)
 
     def common_domain(self, domain_list: list):

@@ -1,3 +1,4 @@
+import time
 from placelib.util import *
 from models.program import Program
 from models.network import Network
@@ -10,26 +11,36 @@ class Simulation:
 
         Parameters
         ----------
-        arg : str
-            The arg is used for ...
-        *args
-            The variable arguments are used for ...
-        **kwargs
-            The keyword arguments are used for ...
+        args : namespace object
+            The populated namespace from argument input
 
         Attributes
         ----------
-        arg : str
-            This is where we store arg,
+        network : Network
+            An instance of the network model created using the parameters provided in the args
+        program : Program
+            An instance of the program model
+        args : namespace object
+            This is where we store args
+        rnd : np.RandomState
+            Container for the pseudo-random number generator used for the whole simulation
+        node_s : int
+            Operator id of the operator source (randomly picked from the set of the roots)
+        node_t : int
+            Operator id of the operator sink (randomly picked)
+        source : int
+            Id of the device where node_s is pinned (currently it is randomly picked from the network)
+        target : int
+            Id of the device where node_t is pinned (currently it is randomly picked from the network)
+        mapper : Mapper
+            An instance of a mapper created based on the algorithm selected
     '''
-    def __init__(self, args):
+    def __init__(self, args, seed):
 
-        self.rnd = np.random.RandomState(args.seed)
+        self.rnd = np.random.RandomState(seed)
         self.args = args
 
-        '''
-        Generate network graph
-        '''
+        # Generate network graph
         G_domain, G_nodes, pos_domain, pos_node = network_random_topology(T=1, NT=3, S=5, NS=1, L=2, NL=4, ET=3, ES=2, EST=1, ETT=2, ELS=1, rnd=self.rnd)
 
         network_edge_server_random_placement(G_nodes, pos_node, args.edge_server_transit_percentage, args.edge_server_stub_percentage, args.edge_server_gateway_percentage, self.rnd)
@@ -37,10 +48,8 @@ class Simulation:
                                 args.device_cap_distr, args.device_cap_p1, args.device_cap_p2,
                                 args.edge_server_cap_distr, args.edge_server_cap_p1, args.edge_server_cap_p2, self.rnd)
 
-        '''
-        Generate application graph
-        '''
 
+        # Generate application graph
         # G_app = program_random_graph(args.num_roots, args.num_operators) # the number of operators in the returned graph possibly not equal to num_operators
         G_app = program_linear_graph(args.num_operators)
         program_random_requirement(G_app, args.op_comp_distr, args.op_comp_p1, args.op_comp_p2,
@@ -57,10 +66,30 @@ class Simulation:
         self.target = self.rnd.choice(self.network.end_devices)
 
         if self.args.alg == 'heuristic':
-            self.mapper = heuMapper(self.program, self.network, {self.node_s: self.source, self.node_t: self.target},
-                                    self.node_s, self.node_t)
-            print(self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries))
-            print(self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries), file=open("sim_results.txt", "a"))
+            self.mapper = heuMapper(self.program, self.network, self.node_s, self.node_t,
+                                    {self.node_s: self.source, self.node_t: self.target})
+        else:
+            raise NotImplementedError
+
+    def map(self):
+        '''Run the mapper and return the mapped result (a dict {operator : device}) and the runtime'''
+        time1 = time.time()
+        if self.args.alg == 'heuristic':
+            map = self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries)
+        else:
+            raise NotImplementedError
+        time2 = time.time()
+        return map, time2 - time1
+
+    def evaluate(self, map, average=True):
+        """ Return the end to end latency between the source and target as a result of the mapping"""
+        delay =  self.mapper.evaluate(map, average)
+        print(f"Returned value from simulation {delay}")
+        return delay
+
+
+
+
 
 
 

@@ -5,29 +5,47 @@ from models.program import Program
 from models.network import Network
 
 class Mapper:
-    def __init__(self, program: Program, network: Network, mapping=None):
+    def __init__(self, program: Program, network: Network, start_operator, end_operator, mapping=None):
         self.program = program
         self.network = network
         self.pinned = []
         self.mapping = mapping
+        self.start_op = start_operator
+        self.end_op = end_operator
+        assert start_operator in self.program.G.nodes
+        assert end_operator in self.program.G.nodes
+        self.path_in_between = list(nx.all_simple_paths(self.program.G, source=self.start_op, target=self.end_op))
 
         if mapping:
             assert type(mapping) == dict, "Already mapped items should be passed in dict"
             for mapped in mapping:
-                assert mapped in self.program.G.nodes, "Mapped operator " + str(mapped) + " is not in the program graph"
+                assert mapped in self.program.G.nodes, f"Mapped operator {mapped} is not in the program graph"
                 assert mapping[mapped] in self.network.edge_servers or mapping[mapped] in self.network.end_devices
                 self.pinned.append(mapped)
 
+    def evaluate(self, mapping, average=True):
+        critical_time = 0
+        for path in self.path_in_between:
+            compute_time = np.sum([self.program.operators[op].estimate_compute_time(self.network.nodes[mapping[op]]) for op in path])
+            communication_time = 0
+            for i in range(len(path) - 1):
+                op1 = path[i]
+                op2 = path[i + 1]
+                kbytes = self.program.get_stream_kbytes_between_operators(op1, op2)
+                communication_time += self.network.latency_between_nodes(op1, op2, kbytes=kbytes, average=average)
+            if compute_time + communication_time > critical_time:
+                critical_time = compute_time + communication_time
+
+        return critical_time
+
 
 class heuMapper(Mapper):
-    def __init__(self, program: Program, network: Network, mapping: dict, start_operatpr, end_operator, delta=10, p_explore=0.3):
-        super().__init__(program, network, mapping)
+    def __init__(self, program: Program, network: Network, start_operator, end_operator, mapping: dict,  delta=10, p_explore=0.3):
+        super().__init__(program, network,  start_operator, end_operator, mapping)
         assert len(self.pinned) > 1, "Heuristic placement requires at least two pinned operators"
         self.delta = delta
         self.p_explore = p_explore
-        self.start_op = start_operatpr
-        self.end_op = end_operator
-        self.path_in_between = nx.all_simple_paths(self.program.G, source=self.start_op, target=self.end_op)
+
 
     def map(self, num_heuristic_restriction=5, N=1):
         best_mapping = self.single_map(num_heuristic_restriction)
@@ -49,10 +67,8 @@ class heuMapper(Mapper):
 
         done = False
         while not done:
-            to_be_placed1 = set([n for n in operator_restriction if self.network.is_operating(operator_restriction[n])])
-            connected_to_mapped = {n: set(program_graph.neighbors(n)) for n in mapping}
-            to_be_placed2 = set().union(*[connected_to_mapped[n] for n in connected_to_mapped])
-            can_be_placed = to_be_placed1 & to_be_placed2 - set(mapping.keys())
+            connected_to_mapped = [neighbor for n in mapping for neighbor in program_graph.neighbors(n)]
+            can_be_placed = [n for n in connected_to_mapped if self.network.is_operating(operator_restriction[n]) and n not in mapping]
             for n in can_be_placed:
                 candidates = self.network.get_operating_devices(operator_restriction[n])
                 mapping[n] = np.random.choice(candidates)
@@ -76,20 +92,6 @@ class heuMapper(Mapper):
                 for operator in unplaced:
                     operator_restriction[operator] = self.network.get_domain_id(operator_restriction_node[operator])
         return mapping
-
-    def evaluate(self, mapping):
-        critical_time = 0
-        for path in self.path_in_between:
-            compute_time = np.sum([self.program.operators[op].estimate_compute_time(self.network.nodes[mapping[op]]) for op in path])
-            communication_time = 0
-            for i in range(len(path) - 1):
-                op1 = path[i]
-                op2 = path[i + 1]
-                bytes = self.program.get_stream_bytes_between_operators(op1, op2)
-                communication_time += self.network.latency_between_nodes(op1, op2, kbytes=bytes)
-                if compute_time + communication_time > critical_time:
-                    critical_time = compute_time + communication_time
-        return critical_time
 
 
     def cluster(self):
