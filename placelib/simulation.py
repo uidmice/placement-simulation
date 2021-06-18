@@ -60,7 +60,7 @@ class Simulation:
         self.network = Network(G_nodes, G_domain, pos_node)
         self.program = Program(G_app, self.node_s, self.node_t)
 
-        self.network.draw_nodes(True) # comment out for testing runtime
+        # self.network.draw_nodes(True) # comment out for testing runtime
 
         self.source = self.rnd.choice(self.network.end_devices)
         self.target = self.rnd.choice(self.network.end_devices)
@@ -84,7 +84,6 @@ class Simulation:
     def evaluate(self, map, average=True):
         """ Return the end to end latency between the source and target as a result of the mapping"""
         delay =  self.mapper.evaluate(map, average)
-        print(f"Returned value from simulation {delay}")
         return delay
 
 
