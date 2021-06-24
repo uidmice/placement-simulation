@@ -2,7 +2,7 @@ import time
 from placelib.util import *
 from models.program import Program
 from models.network import Network
-from placelib.mapper import heuMapper
+from placelib.mapper import heuMapper, exhMapper
 
 
 class Simulation:
@@ -41,7 +41,8 @@ class Simulation:
         self.args = args
 
         # Generate network graph
-        G_domain, G_nodes, pos_domain, pos_node = network_random_topology(T=1, NT=3, S=5, NS=1, L=2, NL=4, ET=3, ES=2, EST=1, ETT=2, ELS=1, rnd=self.rnd)
+        # G_domain, G_nodes, pos_domain, pos_node = network_random_topology(T=1, NT=3, S=5, NS=1, L=2, NL=4, ET=3, ES=2, EST=1, ETT=2, ELS=1, rnd=self.rnd)
+        G_domain, G_nodes, pos_domain, pos_node = network_random_topology(T=1, NT=3, S=2, NS=1, L=2, NL=2, ET=3, ES=2, EST=1, ETT=2, ELS=1, rnd=self.rnd)
 
         network_edge_server_random_placement(G_nodes, pos_node, args.edge_server_transit_percentage, args.edge_server_stub_percentage, args.edge_server_gateway_percentage, self.rnd)
         network_random_capacity(G_nodes, args.router_cap_distr, args.router_factor, args.router_cap_p1, args.router_cap_p2,
@@ -58,7 +59,11 @@ class Simulation:
         self.node_s = [n for n in G_app.nodes if G_app.in_degree(n) == 0][0]
         self.node_t = [n for n in nx.descendants(G_app, self.node_s) if G_app.out_degree(n) == 0][0]
         self.network = Network(G_nodes, G_domain, pos_node)
+        print(len(self.network.end_devices + self.network.edge_servers))
         self.program = Program(G_app, self.node_s, self.node_t)
+        for n in self.network.end_devices + self.network.edge_servers:
+            if G_nodes.degree(n) != 1:
+                print(f'Node {n} has degree {G_nodes.degree(n)}')
 
         # self.network.draw_nodes(True) # comment out for testing runtime
 
@@ -67,6 +72,9 @@ class Simulation:
 
         if self.args.alg == 'heuristic':
             self.mapper = heuMapper(self.program, self.network, self.node_s, self.node_t,
+                                    {self.node_s: self.source, self.node_t: self.target}, self.args.num_tries)
+        elif self.args.alg == 'exhaustive':
+            self.mapper = exhMapper(self.program, self.network, self.node_s, self.node_t,
                                     {self.node_s: self.source, self.node_t: self.target})
         else:
             raise NotImplementedError
@@ -75,15 +83,17 @@ class Simulation:
         '''Run the mapper and return the mapped result (a dict {operator : device}) and the runtime'''
         time1 = time.time()
         if self.args.alg == 'heuristic':
-            map = self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries)
+            mapping = self.mapper.map(self.args.num_heuristic_restriction, self.args.num_tries)
+        elif self.args.alg == 'exhaustive':
+            mapping = self.mapper.map()
         else:
             raise NotImplementedError
         time2 = time.time()
-        return map, time2 - time1
+        return mapping, time2 - time1
 
     def evaluate(self, map, average=True):
         """ Return the end to end latency between the source and target as a result of the mapping"""
-        delay =  self.mapper.evaluate(map, average)
+        delay = self.mapper.evaluate(map, average)
         return delay
 
 

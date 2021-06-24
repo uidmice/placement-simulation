@@ -98,10 +98,21 @@ class Network:
         '''Return the shortest path between node1 and node2 in the graph'''
         return nx.shortest_path(self.G_nodes, node1, node2, weight='weight')
 
-    def latency_between_nodes(self, node1, node2, kbytes, average=True):
+    def get_fastest_path(self, node1, node2, kbytes):
+        for path in nx.all_simple_paths(self.G_nodes, node1, node2):
+            for i in range(len(path) - 1):
+                edge = (path[i], path[i+1])
+                self.G_nodes.edges[edge][kbytes] = self.G_nodes.edges[edge]['weight']/1000 + kbytes/self.G_nodes.edges[edge]['bw']
+                if not (path[i+1] in self.edge_servers or path[i+1] in self.end_devices):
+                    self.G_nodes.edges[edge][kbytes] += self.nodes[edge[1]].delay()
+        return nx.shortest_path(self.G_nodes, node1, node2, weight=kbytes)
+
+    def latency_between_nodes_on_shortest_path(self, node1, node2, kbytes, average=True):
         """Return the communication latency of sending kbytes from node1 to node2. If average is True, the expected latency is returned. Otherwise, it is sampled from a distribution"""
         path = nx.shortest_path(self.G_nodes, node1, node2, weight='weight')
         d = 0
+        if node1 == node2:
+            return 0
         for i in range(len(path) - 1):
             d += self.G_nodes[path[i]][path[i+1]]['weight']/1000 + kbytes/self.G_nodes[path[i]][path[i+1]]['bw']
             if not average:
@@ -110,10 +121,22 @@ class Network:
             d += self.nodes[path[i+1]].delay(average)
         return d * 10
 
+    def latency_between_nodes_on_fastest_path(self, node1, node2, kbytes, average=True):
+        for path in nx.all_simple_paths(self.G_nodes, node1, node2):
+            for i in range(len(path) - 1):
+                edge = (path[i], path[i + 1])
+                self.G_nodes.edges[edge][kbytes] = self.G_nodes.edges[edge]['weight'] / 1000 + kbytes / \
+                                                   self.G_nodes.edges[edge]['bw']
+                if not average:
+                    self.G_nodes.edges[edge][kbytes] += LINK_NOISE_SCALE * np.random.randn()
+                if not (path[i + 1] in self.edge_servers or path[i + 1] in self.end_devices):
+                    self.G_nodes.edges[edge][kbytes] += self.nodes[edge[1]].delay(average)
+        return nx.shortest_path_length(self.G_nodes, node1, node2, weight=kbytes) * 10
+
     def latency_from_node_to_domain(self, node, domain, kbytes):
         """ Return the average latency of sending kbytes from node (in self.nodes) to a domain (in self.domains) """
         target_nodes = self.domains[domain].nodes
-        return np.average([self.latency_between_nodes(node, tn, kbytes) for tn in target_nodes])
+        return np.average([self.latency_between_nodes_on_shortest_path(node, tn, kbytes) for tn in target_nodes])
 
     def latency_between_domains(self, domain1, domain2, kbytes):
         """ Return the average latency of sending kbytes from domain1 (in self.domains) to domain2 (in self.domains)"""

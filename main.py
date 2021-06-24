@@ -38,8 +38,8 @@ def get_args():
     parser.add_argument('--logdir_suffix',
                         default='',
                         help='log directory suffix')
-    parser.add_argument('--seeds', type=int, nargs='+', default=[0], help='Random seeds')
-    parser.add_argument('--num_experiments', type=positive_int, default=1, help="Number of experiments to run per seed")
+    parser.add_argument('--seeds', type=int, nargs='+', default=[0], help='Random seeds (Default 0)')
+    parser.add_argument('--num_experiments', type=positive_int, default=1, help="Number of experiments to run per seed (Default 1)")
 
 
     ########################## Network Parameters########################

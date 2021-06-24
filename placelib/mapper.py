@@ -3,6 +3,7 @@ import numpy as np
 
 from models.program import Program
 from models.network import Network
+from placelib.util import mapInfo, graph_find_a_root
 
 class Mapper:
     def __init__(self, program: Program, network: Network, start_operator, end_operator, mapping=None):
@@ -23,6 +24,28 @@ class Mapper:
                 assert mapping[mapped] in self.network.edge_servers or mapping[mapped] in self.network.end_devices
                 self.pinned.append(mapped)
 
+        self.total_graph = nx.complete_graph(self.network.edge_servers + self.network.end_devices)
+        for edge in self.total_graph.edges:
+            n1 = edge[0]
+            n2 = edge[1]
+            self.total_graph.edges[edge]['paths'] = []
+            for path in nx.all_simple_paths(self.network.G_nodes, n1, n2):
+                rate = 0
+                delay = 0
+                for i in range(len(path) - 1):
+                    rate += 1/self.network.G_nodes.edges[path[i], path[i+1]]['bw']
+                    delay += self.network.G_nodes.edges[path[i], path[i+1]]['weight']/1000
+                    if i < len(path) - 2:
+                        delay += self.network.nodes[path[i+1]].delay()
+                self.total_graph.edges[edge]['paths'].append(mapInfo(path, rate, delay))
+
+    def _stream_delay_min_(self, edge, kbytes):
+        if edge[0] == edge[1]:
+            return 0
+        if edge not in self.total_graph.edges:
+            edge = [edge[1], edge[0]]
+        return min([p.data_rate * kbytes + p.delay for p in self.total_graph.edges[edge]['paths']])
+
     def evaluate(self, mapping, average=True):
         critical_time = 0
         for path in self.path_in_between:
@@ -32,26 +55,29 @@ class Mapper:
                 op1 = path[i]
                 op2 = path[i + 1]
                 kbytes = self.program.get_stream_kbytes_between_operators(op1, op2)
-                communication_time += self.network.latency_between_nodes(op1, op2, kbytes=kbytes, average=average)
+                map_edge = (mapping[op1], mapping[op2])
+                communication_time += self._stream_delay_min_(map_edge, kbytes)
             if compute_time + communication_time > critical_time:
                 critical_time = compute_time + communication_time
-
         return critical_time
 
 
 class heuMapper(Mapper):
-    def __init__(self, program: Program, network: Network, start_operator, end_operator, mapping: dict,  delta=10, p_explore=0.3):
+    def __init__(self, program: Program, network: Network, start_operator, end_operator, mapping: dict, N, delta=10, p_explore=0.3):
         super().__init__(program, network,  start_operator, end_operator, mapping)
         assert len(self.pinned) > 1, "Heuristic placement requires at least two pinned operators"
         self.delta = delta
         self.p_explore = p_explore
-
+        self.cluster_graph = []
+        for _ in range(N):
+            hier, node_loc = self.cluster()
+            self.cluster_graph.append((hier, node_loc))
 
     def map(self, num_heuristic_restriction=5, N=1):
-        best_mapping = self.single_map(num_heuristic_restriction)
+        best_mapping = self.single_map(num_heuristic_restriction, 0)
         critical_time = self.evaluate(best_mapping)
         for _ in range(N - 1):
-            mapping = self.single_map(num_heuristic_restriction)
+            mapping = self.single_map(num_heuristic_restriction, _+1)
             time = self.evaluate(mapping)
             if time < critical_time:
                 best_mapping = mapping
@@ -59,8 +85,8 @@ class heuMapper(Mapper):
         return best_mapping
 
 
-    def single_map(self, num_heuristic_restriction):
-        hier, node_loc = self.cluster()
+    def single_map(self, num_heuristic_restriction, i):
+        (hier, node_loc) = self.cluster_graph[i]
         program_graph = self.program.G.to_undirected()
         operator_restriction = self.domain_restriction(hier, node_loc, self.p_explore)
         mapping = self.mapping.copy()
@@ -152,3 +178,157 @@ class heuMapper(Mapper):
                         if node not in operator_restriction:
                             operator_restriction[node] = cluster_restriction[cluster]
         return operator_restriction
+
+
+class exhMapper(Mapper):
+    def __init__(self, program: Program, network: Network, start_operator, end_operator, mapping: dict):
+        super().__init__(program, network, start_operator, end_operator, mapping)
+        self.shortest_paths = {}
+        for n in self.network.G_nodes.nodes:
+            self.shortest_paths[n] = {}
+            for m in self.network.G_nodes.nodes:
+                self.shortest_paths[n][m] = self.network.get_shortest_path(n, m)
+
+    def map(self):
+
+        def helper(sub_program: nx.DiGraph):
+            if not nx.number_of_nodes(sub_program):
+                return {}, {}
+            if nx.number_of_nodes(sub_program) == 1:
+                for n in sub_program.nodes:
+                    return {n: {placement: self.network.nodes[placement].delay(self.program.operators[n]) for placement in self.total_graph.nodes}}, {}
+
+            root = graph_find_a_root(sub_program)
+            root_edges = list(sub_program.edges(root))
+            sub_program.remove_node(root)
+            node_delay, stream_delay = helper(sub_program)
+            for edge in root_edges:
+                stream_delay[edge] = {}
+                for map_edge in self.total_graph.edges:
+                    d = self._stream_delay_min_(map_edge, self.program.G.edges[edge]['bytes'])
+                    stream_delay[edge][map_edge]= d
+                    stream_delay[edge][(map_edge[1], map_edge[0])] = d
+            node_delay[root] = {placement: self.network.nodes[placement].delay(self.program.operators[root]) for placement in self.total_graph.nodes}
+            return node_delay, stream_delay
+
+        class Unit:
+            def __init__(self, op, in_link, logic_parents: list, graph_list):
+                self.op = op
+                self.in_link = in_link
+                if in_link:
+                    in_link.add_next_unit(self)
+                self.out_links = {}
+                self.graph_list = graph_list
+
+                self.parent_map = {}
+                self.critical_link = None
+
+                if logic_parents:
+                    cur = self.in_link
+                    while len(self.parent_map) < len(logic_parents) and cur:
+                        if cur.operator in logic_parents:
+                            self.parent_map[cur.operator] = cur
+                        cur = cur.unit.in_link
+                    if len(self.parent_map) != len(logic_parents):
+                        raise ValueError
+
+            def add_links(self, option):
+                self.out_links[option] = Link(self, option, self.graph_list)
+
+        class Link:
+            def __init__(self, unit: Unit, option, graph):
+                self.unit = unit
+                self.operator = unit.op
+                self.option = option
+                self.next_unit = None
+
+                delay = 0
+                self.critical_path = None
+                for parent, link in self.unit.parent_map.items():
+                    op_edge = (parent, self.operator)
+                    this_delay = link.cost
+                    if link.option != self.option:
+                        map_edge = (link.option, self.option)
+                        this_delay += graph.stream_delay[op_edge][map_edge]
+                    if this_delay > delay:
+                        delay = this_delay
+                        self.critical_path = link
+                self.cost = graph.node_delay[self.operator][option] + delay
+
+            def add_next_unit(self, unit):
+                assert not self.next_unit
+                self.next_unit = unit
+
+
+        class GraphList:
+            def __init__(self, program_graph, start_op, end_op, node_delay, stream_delay):
+                self.root = Unit(start_op, None, [], self)
+
+                self.start_op = start_op
+                self.terminal = end_op
+                self.unit_list = {start_op: [self.root]}
+                self.program_graph = program_graph
+                self.operator_order = nx.topological_sort(program_graph)
+                self.node_delay = node_delay
+                self.stream_delay = stream_delay
+
+                for option in node_delay[self.start_op]:
+                    self.root.add_links(option)
+
+                previous_node = start_op
+                start = False
+                for op in self.operator_order:
+                    if not start and op != start_op:
+                        continue
+                    elif op == start_op:
+                        start = True
+                        continue
+                    self.unit_list[op] = []
+                    parents = list(program_graph.predecessors(op))
+                    for unit in self.unit_list[previous_node]:
+                        for link in unit.out_links.values():
+                            new_unit = Unit(op, link, parents, self )
+                            self.unit_list[op].append(new_unit)
+                            for option in node_delay[op]:
+                                new_unit.add_links(option)
+                    previous_node = op
+
+
+            def get_optimal_solution(self, terminal):
+                terminal_units = self.unit_list[terminal]
+                all_solutions = {link: link.cost for unit in terminal_units for link in unit.out_links.values()}
+                optimal = min(all_solutions, key=all_solutions.get)
+                mapping = {}
+                cur = optimal
+                while cur:
+                    mapping[cur.operator] = cur.option
+                    cur = cur.unit.in_link
+                return mapping
+
+        g = self.program.G.copy()
+        out_edges = list(g.edges(self.start_op))
+        in_edges = list(g.in_edges(self.end_op))
+        g.remove_node(self.start_op)
+        g.remove_node(self.end_op)
+        node_delay, stream_delay = helper(g)
+        source = self.mapping[self.start_op]
+        sink = self.mapping[self.end_op]
+
+        node_delay[self.start_op] = {source: self.network.nodes[source].delay(self.program.operators[self.start_op])}
+        node_delay[self.end_op] = {sink: self.network.nodes[sink].delay(self.program.operators[self.end_op])}
+        for edge in out_edges:
+            stream_delay[edge] = {(source, next_node): self._stream_delay_min_((source, next_node), self.program.G.edges[edge]['bytes']) for next_node in self.total_graph.nodes}
+        for edge in in_edges:
+            stream_delay[edge] = {(previous_node, sink): self._stream_delay_min_((previous_node, sink), self.program.G.edges[edge]['bytes']) for previous_node in self.total_graph.nodes}
+
+        data = nx.DiGraph()
+        data.add_nodes_from(self.program.G)
+        data.add_edges_from(self.program.G.edges)
+        graph = GraphList(data, self.start_op, self.end_op, node_delay, stream_delay)
+
+        return graph.get_optimal_solution(self.end_op)
+
+
+
+
+

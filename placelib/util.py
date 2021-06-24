@@ -335,7 +335,7 @@ def network_distance_plot(network):
         n = network.end_devices[i]
         domain = network.get_domain_id(n)
         nodes = network.domains[domain].nodes
-        delay_in_LAN[i] = np.average([network.latency_between_nodes(n, tn, 20) for tn in nodes if tn != n])
+        delay_in_LAN[i] = np.average([network.latency_between_nodes_on_shortest_path(n, tn, 20) for tn in nodes if tn != n])
 
     delay_in_MAN = [0] * len(network.end_devices)
     delay_in_WAN = [0] * len(network.end_devices)
@@ -433,3 +433,21 @@ def program_random_requirement(G_app, op_comp_distr, op1, op2, stream_byte_distr
     else:
         _program_stream_bytes_normal_distr(G_app, sp1, sp2, rnd)
     return
+
+class mapInfo:
+    def __init__(self, path, data_rate, delay):
+        self.path = path
+        self.data_rate = data_rate
+        self.delay = delay
+
+def graph_find_a_root(graph: nx.DiGraph):
+    n = np.random.choice(graph.nodes)
+    while graph.in_degree(n) > 0:
+        n = list(graph.predecessors(n))[0]
+    return n
+
+
+
+
+
+
