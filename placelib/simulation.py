@@ -4,6 +4,7 @@ from models.program import Program
 from models.network import Network
 from placelib.mapper import heuMapper, exhMapper
 
+import time
 
 class Simulation:
     '''
@@ -69,7 +70,8 @@ class Simulation:
 
         self.source = self.rnd.choice(self.network.end_devices)
         self.target = self.rnd.choice(self.network.end_devices)
-
+        # time2 = time.time()
+        # print("generate time = ", time2 - time1)
         if self.args.alg == 'heuristic':
             self.mapper = heuMapper(self.program, self.network, self.node_s, self.node_t,
                                     {self.node_s: self.source, self.node_t: self.target}, self.args.num_tries)
