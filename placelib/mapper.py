@@ -23,7 +23,8 @@ class Mapper:
                 assert mapping[mapped] in self.network.edge_servers or mapping[mapped] in self.network.end_devices
                 self.pinned.append(mapped)
 
-    def evaluate(self, mapping, average=True):
+    def evaluate(self, mapping, average=True, times_called=1):
+
         critical_time = 0
         for path in self.path_in_between:
             compute_time = np.sum([self.program.operators[op].estimate_compute_time(self.network.nodes[mapping[op]]) for op in path])
@@ -35,7 +36,11 @@ class Mapper:
                 communication_time += self.network.latency_between_nodes(op1, op2, kbytes=kbytes, average=average)
             if compute_time + communication_time > critical_time:
                 critical_time = compute_time + communication_time
-
+        
+        if(times_called == 0):
+            print("latency between Start and End Node: ", self.network.latency_between_nodes(self.start_op, self.end_op, kbytes=kbytes, average=average), file=open("sim_results.txt", "a"))
+            print("Communication Time: ", communication_time, file=open("sim_results.txt", "a"))
+        
         return critical_time
 
 
@@ -46,16 +51,21 @@ class heuMapper(Mapper):
         self.delta = delta
         self.p_explore = p_explore
 
-
+    
     def map(self, num_heuristic_restriction=5, N=1):
         best_mapping = self.single_map(num_heuristic_restriction)
         critical_time = self.evaluate(best_mapping)
         for _ in range(N - 1):
+            # print("loop entered")
             mapping = self.single_map(num_heuristic_restriction)
+            # print("ran line 61")
             time = self.evaluate(mapping)
+            # print("ran line 63")
             if time < critical_time:
                 best_mapping = mapping
                 critical_time = time
+            # print(_)
+        # print("loop exited")
         return best_mapping
 
 
@@ -66,6 +76,7 @@ class heuMapper(Mapper):
         mapping = self.mapping.copy()
 
         done = False
+
         while not done:
             connected_to_mapped = [neighbor for n in mapping for neighbor in program_graph.neighbors(n)]
             can_be_placed = [n for n in connected_to_mapped if self.network.is_operating(operator_restriction[n]) and n not in mapping]

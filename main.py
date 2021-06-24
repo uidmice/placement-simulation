@@ -1,6 +1,7 @@
 import argparse
 
 from placelib.experiment import Experiment
+from models.network import Network
 
 import time
 
@@ -198,13 +199,24 @@ def get_args():
 
 
 if __name__ == '__main__':
+        # quit()
         args = get_args()
         print(args)
         experiment = Experiment(args)
-        mappings, runtimes, delays = experiment()
+        mappings, runtimes, delays = experiment() 
         print(runtimes)
         print(delays)
         print(mappings)
+
+        # print("\n", file=open("sim_results.txt", "a"))
+        print(args, file=open("sim_results.txt", "a"))
+        print("Runtime = ", runtimes, file=open("sim_results.txt", "a"))
+        print("delay = ", delays, file=open("sim_results.txt", "a"))
+        print("Mapping: ", mappings, file=open("sim_results.txt", "a"))
+        # print(network.latency_between_nodes())
+        # print("source: ", mappings[0][0][0], file=open("sim_results.txt", "a"))
+        # print("target: ", mappings[0][0][8], file=open("sim_results.txt", "a"))
+        # print(len(mappings[0]))
         # print(args)
         # print("\n", file=open("sim_results.txt", "a"))
         # print(args, file=open("sim_results.txt", "a"))

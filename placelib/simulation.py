@@ -58,18 +58,32 @@ class Simulation:
 
         self.node_s = [n for n in G_app.nodes if G_app.in_degree(n) == 0][0]
         self.node_t = [n for n in nx.descendants(G_app, self.node_s) if G_app.out_degree(n) == 0][0]
+        
+        # print("app.nodes: ", G_app.nodes)
+        # print("G_nodes: ")
+        # repr(G_nodes)
+        # print("node_s: ", G_app.nodes[self.node_s])
+        # print("node_t: ", G_app.nodes[self.node_t])
         self.network = Network(G_nodes, G_domain, pos_node)
         self.program = Program(G_app, self.node_s, self.node_t)
-
+        
         # self.network.draw_nodes(True) # comment out for testing runtime
-
+        
         self.source = self.rnd.choice(self.network.end_devices)
         self.target = self.rnd.choice(self.network.end_devices)
+        print("self.source: ", self.source)
+        print("self.target: ", self.target)
+        # print("node_s: ", self.node_s)
+        # print("node_t: ", self.node_t)
+        print("\n", file=open("sim_results.txt", "a"))
+        print("self.source: ", self.source, file=open("sim_results.txt", "a"))
+        print("self.target: ", self.target, file=open("sim_results.txt", "a"))
         # time2 = time.time()
         # print("generate time = ", time2 - time1)
         if self.args.alg == 'heuristic':
             self.mapper = heuMapper(self.program, self.network, self.node_s, self.node_t,
                                     {self.node_s: self.source, self.node_t: self.target})
+            
         else:
             raise NotImplementedError
 
@@ -85,7 +99,9 @@ class Simulation:
 
     def evaluate(self, map, average=True):
         """ Return the end to end latency between the source and target as a result of the mapping"""
-        delay =  self.mapper.evaluate(map, average)
+        times_called = 0
+        delay =  self.mapper.evaluate(map, average, times_called)
+        times_called += 1
         return delay
 
 

@@ -34,8 +34,9 @@ class Experiment:
             mappings[seed] = []
             runtimes[seed] = []
             delays[seed] = []
+            # print(self.num_experiments)
             for _ in range(self.num_experiments):
-                mapping, runtime = self.simulations[seed].map()
+                mapping, runtime = self.simulations[seed].map() # 
                 delay = self.simulations[seed].evaluate(mapping)
                 mappings[seed].append(mapping)
                 runtimes[seed].append(runtime)

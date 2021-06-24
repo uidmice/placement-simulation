@@ -194,16 +194,33 @@ class Network:
 
     def draw_nodes(self, show=False):
         plt.figure(figsize=(8, 8))
-        node_color = {'transit': 'blue', 'stub': 'orangered', 'lan': 'g', 'edge': 'grey', 'host': 'lawngreen', 'gateway': 'darkgreen'}
+        node_color = {'transit': 'blue', 'stub': 'orangered', 'lan': 'g', 'edge': 'grey', 'host': 'lawngreen', 'gateway': 'darkgreen', 'source': 'yellow', 'target': 'purple'}
         link_color = {'T': 'cornflowerblue', 'TT': 'dodgerblue', 'TS': 'tomato', 'S': 'tomato', 'SL': 'g', 'L': 'lime'}
         node_size = {'transit': 150, 'stub': 150, 'host': 150,'edge': 150, 'gateway': 150}
         width_map = {'T': 6, 'TT': 6, 'TS': 6, 'S': 6, 'SL': 6, 'L': 6}
         color_map = [node_color[self.G_nodes.nodes[n]['type']] for n in self.G_nodes.nodes]
+        # print(self.node_s)
+        
+        # secondary_color_map = []
+        # for n in self.G_nodes.nodes:
+        #     if n == 147:
+        #         secondary_color_map += ['yellow']
+        #         pass
+        #     elif n == 117:
+        #         secondary_color_map += ['purple']
+        #     else:
+        #         secondary_color_map += [node_color[self.G_nodes.nodes[n]['type']]]
+
+        node_size_L = [node_size[self.G_nodes.nodes[n]['type']] for n in self.G_nodes.nodes]
+        
+        # node_size_L[147] = 500
+        # node_size_L[117] = 500
+            
         edge_map = [link_color[self.G_nodes.edges[e]['type']] for e in self.G_nodes.edges]
 
         nx.draw(self.G_nodes, pos=self.pos_node,
-                node_size=[node_size[self.G_nodes.nodes[n]['type']] for n in self.G_nodes.nodes], edge_color=edge_map,
-                width=[width_map[self.G_nodes.edges[e]['type']] for e in self.G_nodes.edges], node_color=color_map)
+                node_size=node_size_L, edge_color=edge_map,
+                width=[width_map[self.G_nodes.edges[e]['type']] for e in self.G_nodes.edges], node_color=color_map, with_labels=True)
         if show:
             plt.show()
 
@@ -211,7 +228,7 @@ class Network:
         plt.figure(figsize=(8,4))
         node_color = {'transit': 'blue', 'stub': 'r', 'lan': 'g', 'host': 'g', 'gateway': 'b'}
         color_map = [node_color[self.G_domain.nodes[n]['type']] for n in self.G_domain.nodes]
-        nx.draw(self.G_domain, pos=graphviz_layout(self.G_domain, prog="dot"),  node_color=color_map)
+        nx.draw(self.G_domain, pos=graphviz_layout(self.G_domain, prog="dot"),  node_color=color_map, with_labels=True)
         if show:
             plt.show()
 
