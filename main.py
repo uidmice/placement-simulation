@@ -174,11 +174,11 @@ def get_args():
     parser.add_argument('--stream_byte_p1',
                         type=float,
                         default=10,
-                        help='First parameter for end device capacity; it is the lower bound if uniform distribution is selected or mean if normal distribution. The unit is kbytes (default: 10)')
+                        help='First parameter for the distribution of the size of data between operators; it is the lower bound if uniform distribution is selected or mean if normal distribution. The unit is kbytes (default: 10)')
     parser.add_argument('--stream_byte_p2',
                         type=float,
                         default=60000,
-                        help='Second parameter for end device capacity; it is the upper bound if uniform distribution is selected or mean if normal distribution. The unit is kbytes  (default: 60000)')
+                        help='Second parameter for the distribution of the size of data between operators; it is the upper bound if uniform distribution is selected or variance if normal distribution. The unit is kbytes  (default: 60000)')
 
 
     ################ heuristic algorithm ####################
