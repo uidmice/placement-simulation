@@ -135,7 +135,7 @@ def get_args():
     ########################## Program Parameters########################
     parser.add_argument('--num_operators',
                         type=int,
-                        default=9,
+                        default=10,
                         help='Number of operators in the program graph (default: 9)')
     parser.add_argument('--num_roots',
                         type=int,
@@ -207,16 +207,22 @@ if __name__ == '__main__':
         print(runtimes)
         print(delays)
         print(mappings)
+<<<<<<< Updated upstream
 
         # print("\n", file=open("sim_results.txt", "a"))
+=======
+>>>>>>> Stashed changes
         print(args, file=open("sim_results.txt", "a"))
         print("Runtime = ", runtimes, file=open("sim_results.txt", "a"))
         print("delay = ", delays, file=open("sim_results.txt", "a"))
         print("Mapping: ", mappings, file=open("sim_results.txt", "a"))
+<<<<<<< Updated upstream
         # print(network.latency_between_nodes())
         # print("source: ", mappings[0][0][0], file=open("sim_results.txt", "a"))
         # print("target: ", mappings[0][0][8], file=open("sim_results.txt", "a"))
         # print(len(mappings[0]))
+=======
+>>>>>>> Stashed changes
         # print(args)
         # print("\n", file=open("sim_results.txt", "a"))
         # print(args, file=open("sim_results.txt", "a"))

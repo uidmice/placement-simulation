@@ -218,8 +218,25 @@ class Network:
             
         edge_map = [link_color[self.G_nodes.edges[e]['type']] for e in self.G_nodes.edges]
 
+         # secondary_color_map = []
+        # for n in self.G_nodes.nodes:
+        #     if n == 147:
+        #         secondary_color_map += ['yellow']
+        #         pass
+        #     elif n == 117:
+        #         secondary_color_map += ['purple']
+        #     else:
+        #         secondary_color_map += [node_color[self.G_nodes.nodes[n]['type']]]
+        
+        # node_size_L[147] = 500
+        # node_size_L[117] = 500
+
         nx.draw(self.G_nodes, pos=self.pos_node,
+<<<<<<< Updated upstream
                 node_size=node_size_L, edge_color=edge_map,
+=======
+                node_size=[node_size[self.G_nodes.nodes[n]['type']] for n in self.G_nodes.nodes], edge_color=edge_map,
+>>>>>>> Stashed changes
                 width=[width_map[self.G_nodes.edges[e]['type']] for e in self.G_nodes.edges], node_color=color_map, with_labels=True)
         if show:
             plt.show()

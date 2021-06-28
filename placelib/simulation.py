@@ -80,6 +80,11 @@ class Simulation:
         print("self.target: ", self.target, file=open("sim_results.txt", "a"))
         # time2 = time.time()
         # print("generate time = ", time2 - time1)
+        
+        print("\n", file=open("sim_results.txt", "a"))
+        print("self.source: ", self.source, file=open("sim_results.txt", "a"))
+        print("self.target: ", self.target, file=open("sim_results.txt", "a"))
+
         if self.args.alg == 'heuristic':
             self.mapper = heuMapper(self.program, self.network, self.node_s, self.node_t,
                                     {self.node_s: self.source, self.node_t: self.target})
@@ -100,7 +105,11 @@ class Simulation:
     def evaluate(self, map, average=True):
         """ Return the end to end latency between the source and target as a result of the mapping"""
         times_called = 0
+<<<<<<< Updated upstream
         delay =  self.mapper.evaluate(map, average, times_called)
+=======
+        delay = self.mapper.evaluate(map, average, times_called)
+>>>>>>> Stashed changes
         times_called += 1
         return delay
 

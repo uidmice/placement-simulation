@@ -25,6 +25,17 @@ class Mapper:
 
     def evaluate(self, mapping, average=True, times_called=1):
 
+<<<<<<< Updated upstream
+=======
+    def _stream_delay_min_(self, edge, kbytes):
+        if edge[0] == edge[1]:
+            return 0
+        if edge not in self.total_graph.edges:
+            edge = [edge[1], edge[0]]
+        return min([p.data_rate * kbytes + p.delay for p in self.total_graph.edges[edge]['paths']])
+
+    def evaluate(self, mapping, average=True, times_called=1):
+>>>>>>> Stashed changes
         critical_time = 0
         for path in self.path_in_between:
             compute_time = np.sum([self.program.operators[op].estimate_compute_time(self.network.nodes[mapping[op]]) for op in path])
@@ -38,9 +49,19 @@ class Mapper:
                 critical_time = compute_time + communication_time
         
         if(times_called == 0):
+<<<<<<< Updated upstream
             print("latency between Start and End Node: ", self.network.latency_between_nodes(self.start_op, self.end_op, kbytes=kbytes, average=average), file=open("sim_results.txt", "a"))
             print("Communication Time: ", communication_time, file=open("sim_results.txt", "a"))
         
+=======
+            short_latency = self.network.latency_between_nodes_on_shortest_path(self.start_op, self.end_op, kbytes=kbytes, average=average)
+            fast_latency = self.network.latency_between_nodes_on_fastest_path(self.start_op, self.end_op, kbytes=kbytes, average=average)
+            print("Shortest Path latency between Start and End Node: ", short_latency, file=open("sim_results.txt", "a"))
+            print("Fastest Path latency between Start and End Node: ", fast_latency, file=open("sim_results.txt", "a"))
+            print("Latency Difference between shortest and fastest path: ", short_latency - fast_latency, file=open("sim_results.txt", "a"))
+            print("Communication Time: ", communication_time, file=open("sim_results.txt", "a"))
+
+>>>>>>> Stashed changes
         return critical_time
 
 
