@@ -208,6 +208,7 @@ if __name__ == '__main__':
         print(delays)
         print(mappings)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
         # print("\n", file=open("sim_results.txt", "a"))
 =======
@@ -222,6 +223,13 @@ if __name__ == '__main__':
         # print("target: ", mappings[0][0][8], file=open("sim_results.txt", "a"))
         # print(len(mappings[0]))
 =======
+>>>>>>> Stashed changes
+=======
+        
+        print(args, file=open("sim_results.txt", "a"))
+        print("runtimes: ", runtimes, file=open("sim_results.txt", "a"))
+        print("delays: ", delays, file=open("sim_results.txt", "a"))
+        print("mappings: ", mappings, file=open("sim_results.txt", "a"))
 >>>>>>> Stashed changes
         # print(args)
         # print("\n", file=open("sim_results.txt", "a"))

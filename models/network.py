@@ -63,6 +63,16 @@ class Network:
         self.transit_domain = [n for n in self.G_domain.nodes if self.G_domain.nodes[n]['type'] == 'transit']
         self.stub_domain = [n for n in self.G_domain.nodes if self.G_domain.nodes[n]['type'] == 'stub']
         self.lan_domain = [n for n in self.G_domain.nodes if self.G_domain.nodes[n]['type'] == 'lan']
+        print("lan layer devices: ", self.lan_domain)
+        print("stub layer devices: ", self.stub_domain)
+        print("bottom layer devices: ", self.end_devices)
+
+        
+        # print("lan layer devices: ", self.lan_domain, file=open("sim_results.txt", "a") )
+        # print("stub layer devices: ", self.stub_domain, file=open("sim_results.txt", "a") )
+        # print("bottom layer devices: ", self.end_devices, file=open("sim_results.txt", "a") )
+        
+        # print("printed to txt")
 
         for d in self.G_domain.nodes:
             type = self.G_domain.nodes[d]['type']
@@ -248,6 +258,14 @@ class Network:
         nx.draw(self.G_domain, pos=graphviz_layout(self.G_domain, prog="dot"),  node_color=color_map, with_labels=True)
         if show:
             plt.show()
+
+    # def print_latencies():
+    #     print("\n", file=open("sim_results.txt", "a"))
+    #     # print("lan layer devices: ", self.lan_domain, file=open("sim_results.txt", "a") )
+    #     # print("stub layer devices: ", self.stub_domain, file=open("sim_results.txt", "a") )
+    #     # print("bottom layer devices: ", self.end_devices, file=open("sim_results.txt", "a") )
+    #     print("latency with congestion: ", )
+    #     print("latency without congestion: ", latency_between_nodes_on_fastest_path())
 
 
 

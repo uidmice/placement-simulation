@@ -2,7 +2,12 @@ import time
 from placelib.util import *
 from models.program import Program
 from models.network import Network
+<<<<<<< Updated upstream
 from placelib.mapper import heuMapper
+=======
+from placelib.mapper import heuMapper, exhMapper
+import models.network
+>>>>>>> Stashed changes
 
 import time
 
@@ -71,6 +76,7 @@ class Simulation:
         
         self.source = self.rnd.choice(self.network.end_devices)
         self.target = self.rnd.choice(self.network.end_devices)
+<<<<<<< Updated upstream
         print("self.source: ", self.source)
         print("self.target: ", self.target)
         # print("node_s: ", self.node_s)
@@ -78,6 +84,14 @@ class Simulation:
         print("\n", file=open("sim_results.txt", "a"))
         print("self.source: ", self.source, file=open("sim_results.txt", "a"))
         print("self.target: ", self.target, file=open("sim_results.txt", "a"))
+=======
+        
+        print("\n", file=open("sim_results.txt", "a"))
+        print("source: ", self.source, file=open("sim_results.txt", "a"))
+        print("target: ", self.target, file=open("sim_results.txt", "a"))
+        
+        
+>>>>>>> Stashed changes
         # time2 = time.time()
         # print("generate time = ", time2 - time1)
         

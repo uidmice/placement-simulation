@@ -1,6 +1,7 @@
 
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 Runtime =  {0: [6.172323226928711]}
 delay =  {0: [39079.08960153395]}
 Mapping:  {0: [{0: 37, 8: 126, 1: 169, 7: 127, 6: 128, 5: 127, 4: 126, 3: 126, 2: 126}]}
@@ -7676,4 +7677,369 @@ Namespace(alg='exhaustive', device_cap_distr='uniform', device_cap_p1=2, device_
 Runtime =  {0: [5.046480178833008]}
 delay =  {0: [249.89464455169258]}
 Mapping:  {0: [{5: 18, 4: 39, 3: 39, 2: 39, 1: 38, 0: 38}]}
+>>>>>>> Stashed changes
+=======
+
+
+source:  20
+target:  38
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=60, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [6.6402106285095215]}
+delays:  {0: [2273.933584867973]}
+mappings:  {0: [{0: 20, 59: 38, 1: 20, 58: 38, 2: 20, 57: 38, 3: 20, 56: 38, 4: 20, 55: 39, 5: 20, 54: 39, 6: 20, 53: 38, 7: 20, 52: 38, 8: 20, 51: 39, 9: 20, 50: 39, 10: 20, 49: 38, 11: 20, 48: 38, 12: 20, 47: 38, 13: 20, 46: 38, 14: 20, 45: 39, 15: 20, 44: 39, 16: 20, 43: 38, 17: 20, 42: 38, 18: 20, 41: 39, 19: 20, 40: 38, 20: 20, 39: 39, 21: 20, 38: 39, 22: 20, 37: 39, 23: 20, 36: 39, 24: 20, 35: 38, 25: 20, 34: 38, 26: 20, 33: 38, 27: 39, 32: 38, 28: 38, 31: 38, 29: 38, 30: 38}]}
+
+
+source:  20
+target:  38
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.04089069366455078]}
+delays:  {0: [420.4126376135786]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 16, 6: 16, 5: 16, 4: 17, 2: 16, 3: 15}]}
+
+
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.027925491333007812]}
+delays:  {0: [408.33575433512317]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 17, 2: 18, 6: 17, 3: 18, 5: 16, 4: 17}]}
+lan layer devices:  [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+stub layer devices:  [1, 2, 3, 4, 5, 6]
+bottom layer devices:  [10, 11, 12, 13, 15, 16, 17, 18, 20, 22, 23, 25, 27, 28, 29, 30, 32, 34, 36, 38, 39, 41, 43, 44]
+
+
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.07679343223571777]}
+delays:  {0: [400.4646619642025]}
+mappings:  {0: [{0: 15, 8: 18, 7: 18, 6: 18, 5: 17, 1: 15, 2: 18, 4: 16, 3: 15}]}
+lan layer devices:  [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+stub layer devices:  [1, 2, 3, 4, 5, 6]
+bottom layer devices:  [10, 11, 12, 13, 15, 16, 17, 18, 20, 22, 23, 25, 27, 28, 29, 30, 32, 34, 36, 38, 39, 41, 43, 44]
+
+
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.05186104774475098]}
+delays:  {0: [438.0939929587098]}
+mappings:  {0: [{0: 15, 8: 18, 1: 16, 7: 18, 6: 18, 2: 18, 5: 17, 3: 15, 4: 15}]}
+lan layer devices:  [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+stub layer devices:  [1, 2, 3, 4, 5, 6]
+bottom layer devices:  [10, 11, 12, 13, 15, 16, 17, 18, 20, 22, 23, 25, 27, 28, 29, 30, 32, 34, 36, 38, 39, 41, 43, 44]
+
+
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.041887521743774414]}
+delays:  {0: [364.9417804669107]}
+mappings:  {0: [{0: 15, 8: 18, 1: 16, 7: 18, 2: 16, 6: 16, 3: 17, 5: 16, 4: 17}]}
+lan layer devices:  [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+stub layer devices:  [1, 2, 3, 4, 5, 6]
+bottom layer devices:  [10, 11, 12, 13, 15, 16, 17, 18, 20, 22, 23, 25, 27, 28, 29, 30, 32, 34, 36, 38, 39, 41, 43, 44]
+
+
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.050864219665527344]}
+delays:  {0: [423.1763556979659]}
+mappings:  {0: [{0: 15, 8: 18, 1: 16, 7: 17, 6: 17, 5: 18, 4: 18, 2: 18, 3: 18}]}
+
+
+lan layer devices:  [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+stub layer devices:  [1, 2, 3, 4, 5, 6]
+bottom layer devices:  [10, 11, 12, 13, 15, 16, 17, 18, 20, 22, 23, 25, 27, 28, 29, 30, 32, 34, 36, 38, 39, 41, 43, 44]
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.07100319862365723]}
+delays:  {0: [436.81759017453135]}
+mappings:  {0: [{0: 15, 8: 18, 7: 18, 1: 15, 6: 15, 2: 18, 5: 16, 3: 15, 4: 15}]}
+source:  15
+target:  18
+source:  15
+target:  18
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.020996570587158203]}
+delays:  {0: [330.5469098108339]}
+mappings:  {0: [{0: 15, 8: 18, 7: 18, 1: 17, 6: 17, 2: 17, 5: 17, 3: 16, 4: 16}]}
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.031031131744384766]}
+delays:  {0: [411.0897858266913]}
+mappings:  {0: [{0: 15, 8: 18, 1: 17, 2: 15, 7: 18, 3: 18, 4: 18, 6: 17, 5: 18}]}
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.028605937957763672]}
+delays:  {0: [377.7245102739889]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 18, 2: 17, 6: 17, 3: 17, 5: 15, 4: 16}]}
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.08676695823669434]}
+delays:  {0: [501.38400382685313]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 2: 16, 3: 15, 7: 18, 6: 15, 4: 18, 5: 17}]}
+source:  15
+target:  18
+source:  15
+target:  18
+
+
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.01894831657409668]}
+delays:  {0: [401.3457434634479]}
+mappings:  {0: [{0: 15, 8: 18, 7: 18, 1: 15, 6: 17, 2: 16, 3: 18, 5: 17, 4: 15}]}
+source:  15
+target:  18
+
+
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.027925491333007812]}
+delays:  {0: [385.9034074857622]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 15, 2: 15, 6: 15, 3: 17, 5: 15, 4: 17}]}
+source:  15
+target:  18
+
+
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.06781864166259766]}
+delays:  {0: [405.55850391483057]}
+mappings:  {0: [{0: 15, 8: 18, 7: 17, 6: 18, 5: 16, 1: 15, 4: 16, 2: 17, 3: 16}]}
+source:  15
+target:  18
+
+
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.024933576583862305]}
+delays:  {0: [434.06045684828985]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 16, 2: 16, 3: 17, 6: 16, 4: 17, 5: 15}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.051859140396118164]}
+delays:  {0: [392.3059459805924]}
+mappings:  {0: [{0: 15, 8: 18, 1: 17, 7: 18, 6: 16, 2: 17, 5: 17, 3: 16, 4: 17}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.07081079483032227]}
+delays:  {0: [375.2538712290206]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 18, 2: 16, 6: 18, 3: 16, 5: 17, 4: 15}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.03490734100341797]}
+delays:  {0: [351.2614489685501]}
+mappings:  {0: [{0: 15, 8: 18, 7: 15, 1: 15, 6: 15, 2: 17, 5: 15, 3: 17, 4: 17}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.06981420516967773]}
+delays:  {0: [454.87990532570075]}
+mappings:  {0: [{0: 15, 8: 18, 7: 18, 1: 17, 6: 16, 2: 16, 5: 16, 3: 17, 4: 18}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.03490900993347168]}
+delays:  {0: [371.3185368291937]}
+mappings:  {0: [{0: 15, 8: 18, 7: 18, 6: 17, 1: 15, 5: 16, 2: 16, 4: 16, 3: 15}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.02991962432861328]}
+delays:  {0: [478.4419060109475]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 15, 6: 16, 5: 17, 4: 16, 3: 16, 2: 18}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.05186152458190918]}
+delays:  {0: [443.50080295080664]}
+mappings:  {0: [{0: 15, 8: 18, 7: 16, 1: 15, 6: 18, 2: 15, 5: 18, 3: 15, 4: 17}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.020911693572998047]}
+delays:  {0: [499.6649021230658]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 16, 6: 16, 5: 18, 4: 15, 2: 18, 3: 15}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.06283235549926758]}
+delays:  {0: [426.6367757051766]}
+mappings:  {0: [{0: 15, 8: 18, 1: 17, 7: 18, 2: 17, 6: 18, 3: 16, 5: 18, 4: 15}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.020943880081176758]}
+delays:  {0: [395.45758584931355]}
+mappings:  {0: [{0: 15, 8: 18, 1: 16, 7: 18, 2: 16, 6: 17, 3: 18, 5: 17, 4: 17}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.020949602127075195]}
+delays:  {0: [395.0489110643883]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 16, 2: 16, 6: 16, 3: 18, 5: 16, 4: 16}]}
+
+
+source:  15
+target:  18
+latency without congestion:  16433.965511260667
+latency with congestion:  16434.07324572499
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.036011695861816406]}
+delays:  {0: [371.4365893126952]}
+mappings:  {0: [{0: 15, 8: 18, 7: 17, 1: 17, 6: 17, 2: 16, 5: 17, 3: 16, 4: 17}]}
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+Namespace(alg='heuristic', device_cap_distr='uniform', device_cap_p1=2, device_cap_p2=5, edge_server_cap_distr='uniform', edge_server_cap_p1=8, edge_server_cap_p2=12, edge_server_gateway_percentage=0.3, edge_server_stub_percentage=0.3, edge_server_transit_percentage=0.1, logdir='runs', logdir_suffix='', num_experiments=1, num_heuristic_restriction=5, num_operators=9, num_roots=1, num_tries=10, op_comp_distr='uniform', op_comp_p1=5000, op_comp_p2=100000, router_cap_distr='uniform', router_cap_p1=5, router_cap_p2=15, router_factor='proc_time', seeds=[0], stream_byte_distr='uniform', stream_byte_p1=10, stream_byte_p2=60000)
+runtimes:  {0: [0.038896799087524414]}
+delays:  {0: [402.3962031342686]}
+mappings:  {0: [{0: 15, 8: 18, 1: 15, 7: 18, 6: 15, 5: 15, 2: 16, 4: 18, 3: 16}]}
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
+
+
+source:  15
+target:  18
 >>>>>>> Stashed changes

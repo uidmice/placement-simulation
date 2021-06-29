@@ -56,6 +56,7 @@ class Program:
         """ Return the number of kbytes to be sent from op1 to op2"""
         assert op1 in self.operators, str(op1) + ' not in the program graph'
         assert op2 in self.operators, str(op2) + ' not in the program graph'
+        # print("passed asserts")
         return self.G.edges[op1, op2]['bytes']
 
     def _examine_graph(self, G):

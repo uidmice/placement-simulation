@@ -3,6 +3,12 @@ import numpy as np
 
 from models.program import Program
 from models.network import Network
+<<<<<<< Updated upstream
+=======
+from placelib.util import mapInfo, graph_find_a_root
+import models.network
+
+>>>>>>> Stashed changes
 
 class Mapper:
     def __init__(self, program: Program, network: Network, start_operator, end_operator, mapping=None):
@@ -12,6 +18,7 @@ class Mapper:
         self.mapping = mapping
         self.start_op = start_operator
         self.end_op = end_operator
+        
         assert start_operator in self.program.G.nodes
         assert end_operator in self.program.G.nodes
         self.path_in_between = list(nx.all_simple_paths(self.program.G, source=self.start_op, target=self.end_op))
@@ -23,7 +30,35 @@ class Mapper:
                 assert mapping[mapped] in self.network.edge_servers or mapping[mapped] in self.network.end_devices
                 self.pinned.append(mapped)
 
+<<<<<<< Updated upstream
     def evaluate(self, mapping, average=True, times_called=1):
+=======
+        self.total_graph = nx.complete_graph(self.network.edge_servers + self.network.end_devices)
+        for edge in self.total_graph.edges:
+            n1 = edge[0]
+            n2 = edge[1]
+            self.total_graph.edges[edge]['paths'] = []
+            for path in nx.all_simple_paths(self.network.G_nodes, n1, n2):
+                rate = 0
+                delay = 0
+                for i in range(len(path) - 1):
+                    rate += 1/self.network.G_nodes.edges[path[i], path[i+1]]['bw']
+                    delay += self.network.G_nodes.edges[path[i], path[i+1]]['weight']/1000
+                    if i < len(path) - 2:
+                        delay += self.network.nodes[path[i+1]].delay()
+                self.total_graph.edges[edge]['paths'].append(mapInfo(path, rate, delay))
+        
+        
+        kbytes = self.program.get_stream_kbytes_between_operators(self.network.lan_domain[0], self.network.stub_domain[5])
+        # print(self.program.operators[0])
+        # for i in range(len(self.network.end_devices)-1):
+        #     print(i, ": ", self.network.end_devices[i] in self.program.operators)
+        # print("latency without congestion: ", self.network.latency_between_nodes_on_shortest_path(self.network.lan_domain[0], self.network.stub_domain[0], kbytes))
+        # print("latency with congestion: ", self.network.latency_between_nodes_on_fastest_path(self.network.lan_domain[0], self.network.stub_domain[0], kbytes))
+        
+        # print("latency without congestion: ", self.network.latency_between_nodes_on_shortest_path(self.network.lan_domain[0], self.network.stub_domain[0], kbytes), file=open("sim_results.txt", "a"))
+        # print("latency with congestion: ", self.network.latency_between_nodes_on_fastest_path(self.network.lan_domain[0], self.network.stub_domain[0], kbytes), file=open("sim_results.txt", "a"))
+>>>>>>> Stashed changes
 
 <<<<<<< Updated upstream
 =======
