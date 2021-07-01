@@ -1,4 +1,10 @@
+import os
+import datetime
+import pickle
+
 from placelib.simulation import Simulation
+
+
 
 class Experiment:
     '''
@@ -22,6 +28,17 @@ class Experiment:
     '''
     def __init__(self, args):
         self.args = args
+
+        name = f'{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}_{args.alg}'
+        if args.logdir_suffix:
+            name += f'_{args.logdir_suffix}'
+        self.logdir = os.path.join(
+            args.logdir, name
+        )
+        if not os.path.exists(self.logdir):
+            os.makedirs(self.logdir)
+        print('LOGDIR: ', self.logdir)
+        pickle.dump(self.args, open(os.path.join(self.logdir, 'args.pkl'), 'wb'))
         self.num_experiments = args.num_experiments
         self.seeds = args.seeds
         self.simulations = {seed:Simulation(args, seed) for seed in self.seeds}

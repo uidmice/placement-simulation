@@ -33,7 +33,7 @@ def get_args():
                         default='heuristic',
                         help='Placement Algorithm: heuristic, exhaustive, greedy (default: heuristic)')
     parser.add_argument('--logdir',
-                        default='runs',
+                        default='data',
                         help='exterior log directory')
     parser.add_argument('--logdir_suffix',
                         default='',
@@ -43,6 +43,36 @@ def get_args():
 
 
     ########################## Network Parameters########################
+    parser.add_argument('--num_transit_domains',
+                        type=positive_int,
+                        default=1,
+                        dest='T',
+                        help='Number of transit domains in the network (default: 1)')
+    parser.add_argument('--num_nodes_per_transit_domain',
+                        type=positive_int,
+                        default=3,
+                        dest='NT',
+                        help='Average number of nodes per transit domain in the network (default: 3)')
+    parser.add_argument('--num_stub_domains_per_transit_node',
+                        type=positive_int,
+                        default=2,
+                        dest='S',
+                        help='Average number of stub domains per transit node in the network (default: 2)')
+    parser.add_argument('--num_nodes_per_stub_domain',
+                        type=positive_int,
+                        default=1,
+                        dest='NS',
+                        help='Average number of nodes per stub domain in the network (default: 1)')
+    parser.add_argument('--num_LAN_per_stub_node',
+                        type=positive_int,
+                        default=1,
+                        dest='L',
+                        help='Average number of LANs per stub node in the network (default: 1)')
+    parser.add_argument('--num_host_per_LAN',
+                        type=positive_int,
+                        default=1,
+                        dest='NL',
+                        help='Average number of hosts per LAN in the network (default: 2)')
 
     ## For edge server:
     parser.add_argument('--edge_server_t',
