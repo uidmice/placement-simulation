@@ -97,6 +97,7 @@ class Simulation:
 
     def map(self):
         '''Run the mapper and return the mapped result (a dict {operator : device}) and the runtime'''
+        now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         profiler = cProfile.Profile()
         profiler.enable()
         if self.args.alg == 'heuristic':
@@ -107,11 +108,12 @@ class Simulation:
             raise NotImplementedError
         profiler.disable()
         stats = pstats.Stats(profiler).sort_stats('cumtime').strip_dirs()
-        stats.dump_stats(os.path.join(self.logdir, 'profile_stats'))
+        stats.dump_stats(os.path.join(self.logdir, f'{now}_profile_stats'))
         t = 0
         for func in stats.stats.keys():
             if 'map' in func:
                 t = stats.stats[func][3]
+        pickle.dump([mapping, t], open(os.path.join(self.logdir, f'{now}_results.pkl'), 'wb'))
         return mapping, t
 
     def evaluate(self, map, average=True):
