@@ -97,7 +97,7 @@ class Simulation:
 
     def map(self):
         '''Run the mapper and return the mapped result (a dict {operator : device}) and the runtime'''
-        now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")[:-3]
         profiler = cProfile.Profile()
         profiler.enable()
         if self.args.alg == 'heuristic':
